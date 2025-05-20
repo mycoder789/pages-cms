@@ -23,33 +23,33 @@ export default function Page() {
 			<div className="max-w-screen-sm mx-auto p-4 md:p-6 space-y-6">
 				{user.accounts.length > 0
 					? <>
-							<h2 className="font-semibold text-lg md:text-2xl tracking-tight">Last visited</h2>
+							<h2 className="font-semibold text-lg md:text-2xl tracking-tight">最近访问</h2>
 							<RepoLatest/>
-							<h2 className="font-semibold text-lg md:text-2xl tracking-tight">Open a project</h2>
+							<h2 className="font-semibold text-lg md:text-2xl tracking-tight">打开一个项目</h2>
 							<RepoSelect onAccountSelect={(account) => setDefaultAccount(account)}/>
 							{user?.githubId &&
 								<>
-									<h2 className="font-semibold text-lg md:text-2xl tracking-tight">Create from a template</h2>
+									<h2 className="font-semibold text-lg md:text-2xl tracking-tight">从模板创建项目</h2>
 									<RepoTemplates defaultAccount={defaultAccount}/>
 								</>
 							}
 						</>
 					:	user.githubId
 							? <Message
-									title="Install the GitHub app"
-									description="You must install the GitHub application for the accounts you want to use Pages CMS with."
+									title="安装 GitHub 应用"
+									description="你必须为想要使用 Pages CMS 的账户安装 GitHub 应用。"
 									className="absolute inset-0"
 								>
 									<form action={handleAppInstall}>
 										<SubmitButton type="submit">
 											<Github className="h-4 w-4 mr-2" />
-											Install
+											安装
 										</SubmitButton>
 									</form>
 								</Message>
 						  : <Message
-									title="Nothing to see (yet)"
-									description="You must be invited to a repository to collaborate. Ask the person who invited you or manages your organization to invite you."
+									title="暂无内容"
+									description="你必须被邀请加入某个代码仓库，才能进行协作。请联系邀请人或组织管理员。"
 									className="absolute inset-0"
 								/>
 				}
