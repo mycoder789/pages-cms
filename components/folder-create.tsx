@@ -53,7 +53,7 @@ const FolderCreate = ({
               content: "",
             }),
           });
-          if (!response.ok) throw new Error(`Failed to create folder: ${response.status} ${response.statusText}`);
+          if (!response.ok) throw new Error(`创建文件夹失败: ${response.status} ${response.statusText}`);
 
           const data: any = await response.json();
           
@@ -66,10 +66,10 @@ const FolderCreate = ({
       });
 
       toast.promise(createPromise, {
-        loading: `Creating folder "${fullNewPath}"`,
+        loading: `正在创建文件夹 "${fullNewPath}"...`,
         success: (response: any) => {
           if (onCreate) onCreate(response.data);
-          return `Folder "${fullNewPath}" created successfully.`;
+          return `文件夹 "${fullNewPath}" 创建成功。`;
         },
         error: (error: any) => error.message,
       });
@@ -85,24 +85,6 @@ const FolderCreate = ({
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create a folder</DialogTitle>
-          <DialogDescription>Choose a name for the folder to create{path ? ` under "${normalizePath(path)}"` : null}.</DialogDescription>
-        </DialogHeader>
-        <Input
-          defaultValue=""
-          onChange={(e) => setFolderPath(e.target.value)}
-        />
-        <DialogFooter>
-          <DialogClose asChild>
-            <Button type="button" variant="secondary">Cancel</Button>
-          </DialogClose>
-          <DialogClose asChild>
-            <Button type="submit" onClick={handleCreate}>Create</Button>
-          </DialogClose>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-};
-
-export { FolderCreate };
+          <DialogTitle>创建文件夹</DialogTitle>
+          <DialogDescription>
+            请输入要创建的
