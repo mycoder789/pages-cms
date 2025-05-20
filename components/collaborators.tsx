@@ -36,13 +36,11 @@ export function Collaborators({
   repo: string,
   branch?: string
 }) {
-  // TODO: add support for branches and accounts collaborators
   const [collaborators, setCollaborators] = useState<any[]>([]);
   const [addCollaboratorState, addCollaboratorAction] = useFormState(handleAddCollaborator, { message: "", data: [] });
   const [email, setEmail] = useState<string>("");
   const [removing, setRemoving] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  // TODO: remove this, we can probably let error.tsx catch that
   const [error, setError] = useState<string | undefined | null>(null);
 
   const isEmailInList = useMemo(() => collaborators.some(collaborator => collaborator.email === email), [email, collaborators]);
@@ -57,11 +55,9 @@ export function Collaborators({
       setError(null);
       try {
         const response = await fetch(`/api/collaborators/${owner}/${repo}`);
-
-        if (!response.ok) throw new Error(`Failed to fetch collection: ${response.status} ${response.statusText}`);
+        if (!response.ok) throw new Error(`获取协作者失败: ${response.status} ${response.statusText}`);
 
         const data: any = await response.json();
-
         if (data.status !== "success") throw new Error(data.message);
 
         setCollaborators(data.data);
@@ -116,7 +112,7 @@ export function Collaborators({
         <Skeleton className="h-6 w-6 rounded-full" />
         <Skeleton className="h-5 w-24 text-left rounded" />
         <Button variant="outline" size="xs" className="ml-auto" disabled>
-          Remove
+          移除
         </Button>
       </li>
     </ul>
@@ -125,8 +121,8 @@ export function Collaborators({
   if (error) {
     return (
       <Message
-        title="Something's wrong"
-        description={`We could not fetch the list of collaborators.`}
+        title="出错了"
+        description="无法获取协作者列表。"
         className="absolute inset-0"
       />
     );
@@ -134,7 +130,6 @@ export function Collaborators({
   
   return (
     <div className="space-y-4">
-      {/* <pre>{JSON.stringify(collaborators, null, 2)}</pre> */}
       {isLoading
         ? loadingSkeleton
         : collaborators.length > 0
@@ -142,7 +137,7 @@ export function Collaborators({
               {collaborators.map((collaborator: any) => (
                 <li key={collaborator.id} className="flex gap-x-2 items-center border border-b-0 last:border-b first:rounded-t-md last:rounded-b-md px-3 py-2 text-sm">
                   <Avatar className="h-6 w-6">
-                    <AvatarImage src={`https://unavatar.io/${collaborator.email}?fallback=false`} alt={`${collaborator.email}'s avatar`} />
+                    <AvatarImage src={`https://unavatar.io/${collaborator.email}?fallback=false`} alt={`${collaborator.email} 的头像`} />
                     <AvatarFallback className="font-medium text-muted-foreground uppercase text-xs">
                       {collaborator.email.split('@')[0].substring(0, 2)}
                     </AvatarFallback>
@@ -153,20 +148,20 @@ export function Collaborators({
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <Button variant="outline" size="xs" className="ml-auto" disabled={removing.includes(collaborator.id)}>
-                        Remove
+                        移除
                         {removing.includes(collaborator.id) && (<Loader className="ml-2 h-4 w-4 animate-spin" />)}
                       </Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>
-                        <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                        <AlertDialogTitle>确认操作</AlertDialogTitle>
                         <AlertDialogDescription>
-                          This will remove access to &quot;{owner}/{repo}&quot; for &quot;{collaborator.email}&quot;.
+                          这将移除「{collaborator.email}」对「{owner}/{repo}」的访问权限。
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => handleConfirmRemove(collaborator.id)}>Remove collaborator</AlertDialogAction>
+                        <AlertDialogCancel>取消</AlertDialogCancel>
+                        <AlertDialogAction onClick={() => handleConfirmRemove(collaborator.id)}>确认移除</AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>
@@ -175,7 +170,7 @@ export function Collaborators({
             </ul>
           : <div className="bg-accent text-muted-foreground text-sm px-3 py-2 rounded-md flex items-center justify-center h-[50px]">
               <Ban className="h-4 w-4 mr-2"/>
-              No collaborators
+              暂无协作者
             </div>
       }
       <form action={addCollaboratorAction} className="flex gap-x-2">
@@ -185,7 +180,7 @@ export function Collaborators({
           <Input
             type="email"
             name="email"
-            placeholder="Email"
+            placeholder="请输入协作者邮箱"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -195,7 +190,7 @@ export function Collaborators({
           }
         </div>
         <SubmitButton type="submit" disabled={isEmailInList}>
-          Invite by email
+          邀请协作者
         </SubmitButton>
       </form>
     </div>
