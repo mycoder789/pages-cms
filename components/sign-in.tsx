@@ -30,11 +30,13 @@ export function SignIn() {
   return (
     <div className="h-screen p-4 md:p-6 flex justify-center items-center">
       <div className="sm:max-w-[340px] w-full space-y-6">
-        <h1 className="text-xl lg:text-2xl font-semibold tracking-tight text-center">Sign in to Pages CMS</h1>
+        <h1 className="text-xl lg:text-2xl font-semibold tracking-tight text-center">
+          登录 Pages CMS
+        </h1>
         <form action={handleGithubSignIn}>
           <SubmitButton type="submit" className="w-full">
             <Github className="h-4 w-4 mr-2" />
-            Sign in with GitHub
+            使用 GitHub 登录
           </SubmitButton>
         </form>
         <div className="relative text-center">
@@ -42,19 +44,30 @@ export function SignIn() {
             <hr className="border-t w-full"/>
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background px-2 text-muted-foreground">Or</span>
+            <span className="bg-background px-2 text-muted-foreground">或</span>
           </div>
         </div>
         <form action={emailSignInAction} className="space-y-2">
-          <Input ref={emailInputRef} type="email" name="email" placeholder="Email" required/>
+          <Input
+            ref={emailInputRef}
+            type="email"
+            name="email"
+            placeholder="请输入邮箱地址"
+            required
+          />
           {emailSignInState?.error &&
             <div className="text-sm font-medium text-red-500">{emailSignInState.error}</div>
           }
           <SubmitButton type="submit" className="w-full">
-            Sign in with email
+            使用邮箱登录
           </SubmitButton>
         </form>
-        <p className="text-sm text-muted-foreground">By clicking continue, you agree to our <a className="underline hover:decoration-muted-foreground/50" href="https://pagescms.org/terms" target="_blank">Terms of Service</a> and <a className="underline hover:decoration-muted-foreground/50" href="https://pagescms.org/privacy" target="_blank">Privacy Policy</a>.</p>
+        <p className="text-sm text-muted-foreground">
+          点击继续，即表示你同意我们的
+          <a className="underline hover:decoration-muted-foreground/50" href="https://pagescms.org/terms" target="_blank">服务条款</a>
+          和
+          <a className="underline hover:decoration-muted-foreground/50" href="https://pagescms.org/privacy" target="_blank">隐私政策</a>。
+        </p>
       </div>
     </div>
   );
