@@ -19,7 +19,7 @@ const EmptyCreate = ({
   onCreate?: (path: string) => void;
 }) => {
   const { config } = useConfig();
-  if (!config) throw new Error(`Configuration not found.`);
+  if (!config) throw new Error(`未找到配置（Configuration not found）`);
 
   const router = useRouter();
 
@@ -30,33 +30,32 @@ const EmptyCreate = ({
 
   if (type === "settings") {
     path = ".pages.yml";
-    toCreate = "configuration file";
+    toCreate = "配置文件";
     redirectTo = `${redirectTo}/settings`;
   } else if (type === "content" || type === "media") {
-    if (!name) throw new Error(`"name" is required.`);
+    if (!name) throw new Error(`参数 "name" 是必需的`);
     const schema = getSchemaByName(config.object, name, type);
-    if (!schema) throw new Error(`Schema not found for ${name}.`);
+    if (!schema) throw new Error(`未找到名为 ${name} 的 schema`);
 
     if (type === "media") {
       path = `${schema.input}/.gitkeep`;
-      toCreate = "media folder";
+      toCreate = "媒体文件夹";
       redirectTo = `${redirectTo}/media/${schema.name}`;
     } else {
       if (schema.type === "file") {
         path = schema.path;
-        toCreate = "file";
+        toCreate = "文件";
         if (schema.fields && schema.fields.length) {
-          // TODO: this will still not pass validation for patterns/required fields
           content = initializeState(schema.fields, {});
         }
       } else {
         path = `${schema.path}/.gitkeep`;
-        toCreate = "collection folder";
+        toCreate = "内容集合文件夹";
       }
       redirectTo = `${redirectTo}/${schema.type}/${schema.name}`;
     }
   } else {
-    throw new Error(`Invalid type "${type}".`);
+    throw new Error(`无效的类型 "${type}"`);
   }
   
   const handleCreate = async () => {
@@ -73,7 +72,7 @@ const EmptyCreate = ({
             }),
           });
           if (!response.ok) {
-            throw new Error(`Failed to create ${toCreate}: ${response.status} ${response.statusText}`);
+            throw new Error(`创建 ${toCreate} 失败: ${response.status} ${response.statusText}`);
           }
 
           const data: any = await response.json();
@@ -87,12 +86,11 @@ const EmptyCreate = ({
       });
 
       toast.promise(createPromise, {
-        loading: `Creating ${toCreate}`,
+        loading: `正在创建 ${toCreate}...`,
         success: (response: any) => {
-          // TODO: for media, we want to navigate to the root, not redirect in case it's in a dialog
           router.push(`${redirectTo}?empty-created`);
           router.refresh();
-          return `Successfully created ${toCreate}.`;
+          return `${toCreate} 创建成功！`;
         },
         error: (error: any) => error.message,
       });
